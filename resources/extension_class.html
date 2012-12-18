@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Welcome</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,300italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+<h1><strong>The extension  class</strong></h1>
+<p>As stated  before, the name of your extension class should be  &quot;CRunNameOfExtension&quot;.  <br />
+  The class is  derived from the CRunExtension class, using the &quot;Cservices.extend&quot;  function..<br />
+  The class  functions are similar to those of the other runtimes, like the Flash, Java and  XNA runtimes.</p>
+<p><strong>Default variables<br />
+</strong>A set of  variables are defined in the parent class :</p>
+<ul>
+  <li>ho : points to the CExtension object.  Equivalent to the headerObject structure in MMF. Ho is also useful as callback  functions are defined to exchange data with the main runtime.</li>
+  <li>rh : points to the CRun object. Equivalent to  the runHeader structure in MMF.</li>
+</ul>
+<p><strong>Constructor<br />
+  </strong>If you convert  your code from other runtimes, you should set the class variable to 0 (or null  for objects) in the constructor : this will avoid conversion problems.</p>
+<h4>int getNumberOfConditions()</h4>
+<blockquote>
+  <p>This function  should return the number of conditions contained in the object (equivalent to  the CND_LAST define in the ext.h file).</p>
+</blockquote>
+<h4>bool createRunObject(file, cob, version)</h4>
+<blockquote>
+  <p>This function  is called when the object is created. As XNA objects are just created when  needed, there is no EDITDATA structure. Instead, I send to the function a CFile  object, pointing directly to the data of the object (the EDITDATA structure, on  disc).<br />
+    The CFile object  allows you to read the data. It automatically converts PC-like ordering (big or  little Indian I cant remember) into Flash ordering. It contains functions to  read bytes, shorts, int, colors and strings. Read the documentation about this  class at the end of the document.<br />
+  &quot;Version&quot;  contains the version value contained in the extHeader structure of the  EDITDATA.</p>
+  <p>So all you have  to do, is read the data from the CBinaryFile object, and initialise your object  accordingly.</p>
+</blockquote>
+<h4>void destroyRunObject(bFast)</h4>
+<blockquote>
+  <p>Called when the  object is destroyed. Due to garbage collection, this routine should not have  much to do, as all the data reserved in the object will be freed at the next  GC. bFast is true if the object is destroyed at end of frame. It is false if  the object is destroyed in the middle of the application.</p>
+</blockquote>
+<h4>int handleRunObject()</h4>
+<blockquote>
+  <p>Same as the C++  function. Perform all the tasks needed for your object in this function.  As the C function, this function returns  value indicating what to do :</p>
+  <ul>
+    <li>CRunExtension.REFLAG_ONESHOT : handleRunObject  will not be called anymore</li>
+    <li>CRunExtension.REFLAG_DISPLAY :  displayRunObject is called at next refresh.</li>
+    <li>Return 0 and the handleRunObject method will  be called at the next loop.</li>
+  </ul>
+</blockquote>
+<h4>void displayRunObject(renderer, xDraw, yDraw)</h4>
+<blockquote>
+  <p>Called to  display the object. If your object needs to be displayed on the screen,. Use  the renderer to draw the object (see later). You must take into account the  xDraw and yDraw parameters, as they include the position of the layer  containing the object.<br />
+    Please note  that if you object is not to be displayed (it does not contain the  OEFLAG_SPRITE or OEFLAG_BACKDROP flags), the displayRunObject routine can still  be called when the object is moved. In this case, the context variable will be  null, and xDraw and yDraw equal to zero.</p>
+</blockquote>
+<h4>void pauseRunObject()</h4>
+<blockquote>
+  <p>Called when the  application goes into pause mode.</p>
+</blockquote>
+<h4>void continueRunObject()</h4>
+<blockquote>
+  <p>Called when the  application restarts.</p>
+</blockquote>
+<h4>CFontInfo getRunObjectFont()</h4>
+<blockquote>
+  <p>Equivalent to  the C++ version. This function returns a CFontInfo object, a small object  equivalent to the LOGFONT structure in C. <br />
+    See at the end of the document the  definition of the CFontInfo object.</p>
+</blockquote>
+<h4>void setRunObjectFont(fi, rc)</h4>
+<blockquote>
+  <p>Called when the  font of the object needs to be changed. The rc parameter is null when no resize  is needed.</p>
+</blockquote>
+<h4>int getRunObjectTextColor()</h4>
+<blockquote>
+  <p>Returns the  current color of the text as an Integer.</p>
+</blockquote>
+<h4>void setRunObjectTextColor(rgb)</h4>
+<blockquote>
+  <p>Sets the  current color of the text.</p>
+</blockquote>
+<h4>CMask getRunObjectCollisionMask(flags)</h4>
+<blockquote>
+  <p>If implemented,  this function should return a CMask object that contains the collision mask of  the object. Return null in any other case.</p>
+</blockquote>
+<h4>boolean condition(num, cnd)</h4>
+<blockquote>
+  <p>The main entry  for the evaluation of the conditions.</p>
+  <ul>
+    <li>num : number of the condition (equivalent to  the CND_ definitions in ext.h)</li>
+    <li>cnd : a pointer to a CCndExtension object that  contains useful callback functions to get the parameters. </li>
+  </ul>
+  <p>This  function should return true or false, depending on the condition.</p>
+</blockquote>
+<h4>void action(num, act)</h4>
+<blockquote>
+  <p>The main entry  for the actions.</p>
+  <ul>
+    <li>num : number of the action, as defined in  ext.h</li>
+    <li>act : pointer to a CActExtension object that  contains callback functions to get the parameters.</li>
+  </ul>
+</blockquote>
+<h4>number_or_string expression(num)</h4>
+<blockquote>
+  <p>The main entry  for expressions.</p>
+  <ul>
+    <li>num : number of the expression</li>
+  </ul>
+  <p>To get the  expression parameters, you have to call the getExpParam() method defined in the  &quot;ho&quot; variable, for each of the parameters. This function returns a  value which contains the parameter (number or string).</p>
+  <p>This method  should return the correct value. The returned value can be a number or a string.  There is no need to set the HOF_STRING flags if your return a string as you  would do in C++.</p>
+</blockquote>
+</body>
+</html>

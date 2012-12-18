@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Welcome</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<h1>this.ho : the CExtension callbacks</h1>
+<p>The &quot;ho&quot; variable in the extension object gives you access to the CExtension object, which is a derivative of the main CObject class. I have  programmed a few callback functions in the CExtension object. Here are these functions :</p>
+<h4>getX()</h4>
+<blockquote>
+  <p>Returns the current X co-ordinate of the object (hoX).</p>
+</blockquote>
+<h4>getY()</h4>
+<blockquote>
+  <p>Returns the current Y coordinate of the object (hoY)</p>
+</blockquote>
+<h4>getWidth()</h4>
+<blockquote>
+  <p>Returns the current width of the object (hoImgWidth).</p>
+</blockquote>
+<h4>getHeight()</h4>
+<blockquote>
+  <p>Returns the current height of the object (hoImgHeight).</p>
+</blockquote>
+<h4>setPosition(x, y)</h4>
+<blockquote>
+  <p>Changes the position of the object, taking the movement into account (much better than  poking into hoX and hoY).</p>
+</blockquote>
+<h4>setX(x)</h4>
+<blockquote>
+  <p>Changes the position of the object (hoX), and takes care of the movement and refresh. Same remark as setPosition.</p>
+</blockquote>
+<h4>setY(y)</h4>
+<blockquote>
+  <p>Same as setX for Y co-ordinate. Same remark as setPosition.</p>
+</blockquote>
+<h4>setWidth(width)</h4>
+<blockquote>
+  <p>Change the width of the object, taking care of the hoRect fields.</p>
+</blockquote>
+<h4>setHeight(height)</h4>
+<blockquote>
+  <p>Same as setWidth, for height.</p>
+</blockquote>
+<h4>loadImageList(imageList)</h4>
+<blockquote>
+  <p>This method should be called in the createRunObject method of your object. If your object uses images stored in the image bank, you must call this method so that the proper images are loaded.<br />
+  Just make an array with all the handles of the images, the size should be the exact number of images to load. Call this method (it may take some time to return). All the images will be loaded in the runtime.</p>
+</blockquote>
+<h4>getImage(handle)</h4>
+<blockquote>
+  <p>Call this function to retrieve an image from a handle. The image must have been previously loaded with loadImageList. The value returned could be null if the image could not be loaded, but this is very unlikely to occur. It returns a CImage object.<br />
+  CImage is part of the &quot;Banks&quot; package. So you should import it with &quot;import Banks.*&quot;.</p>
+</blockquote>
+<h4>reHandle()</h4>
+<blockquote>
+  <p>If you returned a REFLAG_ONESHOT value in your handleRunObject method, this will reinforce the  method to be called at each loop.</p>
+</blockquote>
+<h4>generateEvent(code, param)</h4>
+<blockquote>
+  <p>Generate an event with the specific code. The parameter can be recuperated with the ho.getEventParam method. You should prefer the push_event method, specially if your event is generated in a listener (MouseListener, EventListener) as the listener events occurs in another thread and the event routines are not multi-thread proof.</p>
+</blockquote>
+<h4>pushEvent(code, param)</h4>
+<blockquote>
+  <p>This is the method of choice to generate an event.</p>
+</blockquote>
+<h4>pause()</h4>
+<blockquote>
+  <p>Pauses the application, when you have some lengthy work to perform (like opening a file  selector).</p>
+</blockquote>
+<h4>resume()</h4>
+<blockquote>
+  <p>Resumes the application at the end of your work.</p>
+</blockquote>
+<h4>redraw()</h4>
+<blockquote>
+  <p>Forces a redraw of the object (the displayRunObject routine is called at next refresh).</p>
+</blockquote>
+<h4>redisplay()</h4>
+<blockquote>
+  <p>Forces a redraw of the background of the application. You should use this if your object is a background object.</p>
+</blockquote>
+<h4>destroy()</h4>
+<blockquote>
+  <p>Destroys the object at the end of the current loop.</p>
+</blockquote>
+<h4>getExtUserData()</h4>
+<blockquote>
+  <p>Returns the private field of the extHeader structure.</p>
+</blockquote>
+<h4>setExtUserData(data)</h4>
+<blockquote>
+  <p>Changes the private field of the extHeader structure.</p>
+</blockquote>
+<h4>getEventCount()</h4>
+<blockquote>
+  <p>Returns the rh4EventCount value, used in controls to trigger the events.</p>
+</blockquote>
+<h4>getExpParam()</h4>
+<blockquote>
+  <p>Returns the next expression parameter.</p>
+</blockquote>
+<h4>getFirstObject()</h4>
+<blockquote>
+  <p>Returns the first object currently defined in the frame. Should be used in conjunction with getNextObject(). Returns a CObject object.</p>
+</blockquote>
+<h4>getNextObject()</h4>
+<blockquote>
+  <p>Returns the next object in the list of objects of the frame. Returns null if no more objects is available. This method will return the extension object it is called from. Returns a CObject object.</p>
+</blockquote>
+<p><strong>this.ho also points to variables that you can use:</strong></p>
+<h4>pLayer</h4>
+<blockquote>
+  <p>A pointer to the layer object that contains the extension object</p>
+</blockquote>
+<h4>bShown</h4>
+<blockquote>
+  <p>A boolean value indicating if the object hidden ot shown.</p>
+</blockquote>
+<br />
+<h1><a name="CRun" id="CRun"></a>this.rh : CRun callback functions</h1>
+<p>You access the CRun object via the &quot;rh&quot; variable defined in the CRunExtension class. This object contains three methods used to define global data.</p>
+<p>Some extensions need to communicate between objects. In C++ this was done simply by defining global variable in the code. I have defined three functions in CRun to allow you to create global classes.</p>
+<h4>addStorage(data, id)</h4>
+<blockquote>
+  <p>Adds a new  object to the storage, with the &quot;id&quot; identifier. &quot;id&quot; is a simple integer number. The storage class must be derived from the class CExtStorage. This function has no effect if an object with the same identifier already exists.</p>
+</blockquote>
+<h4>getStorage(id)</h4>
+<blockquote>
+  <p>Returns the CExtStorage object with the given identifier. Returns null if the object is not found.</p>
+</blockquote>
+<h4>delStorage(id)</h4>
+<blockquote>
+  <p>Deletes the object with the given identifier.</p>
+</blockquote>
+<br />
+<h1><a name="CActExtension" id="CActExtension"></a>CActExtension callback functions</h1>
+<p>The CActExtension object is transmitted to the extension &quot;action&quot; method when a action is called. This object contains callback function to gather the parameters of the action.<br />
+These functions want two parameters:</p>
+<ul>
+  <li>The CRun object (available in the extension as &quot;rh&quot;).</li>
+  <li>The number of the parameter in the action,  starting at 0</li>
+</ul>
+<h4>getParamObject(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns the CObject  pointed to by the PARAM_OBJECT.</p>
+</blockquote>
+<h4>getParamTime(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns the time value in milliseconds.</p>
+</blockquote>
+<h4>getParamBorder(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns the border parameter.</p>
+</blockquote>
+<h4>getParamDirection(rhPtr, num)</h4>
+<blockquote>
+  <p>(obsolete, but might be used in old extensions). Returns a direction from 0 to 31.</p>
+</blockquote>
+<h4>getParamCreate(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns a pointer to the PARAM_CREATE object (for future use maybe).</p>
+</blockquote>
+<h4>getParamAnimation(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns the number of the animation.</p>
+</blockquote>
+<h4>getParamPlayer(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns the number of the player.</p>
+</blockquote>
+<h4>getParamEvery(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns a pointer to the PARAM_EVERY parameter.</p>
+</blockquote>
+<h4>getParamKey(rhPtr, num)</h4>
+<blockquote>
+  <p>Return the key code contained in the parameter.</p>
+</blockquote>
+<h4>getParamSpeed(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns a speed, from 0 to 100.</p>
+</blockquote>
+<h4>getParamPosition(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns a pointer to a CPositionInfo classe that contains the X and Y coordinate. CPositionInfo is defined in the Params package.</p>
+</blockquote>
+<h4>getParamJoyDirection(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns a joystick direction.</p>
+</blockquote>
+<h4>getParamShoot(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns a pointer to the PARAM_SHOOT object contained in the action (for future use  maybe).</p>
+</blockquote>
+<h4>getParamZone(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns a pointer to the PARAM_ZONE parameter.</p>
+</blockquote>
+<h4>getParamExpression(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns the value contained in the expression.</p>
+</blockquote>
+<h4>getParamColour(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns a color, as an integer.</p>
+</blockquote>
+<h4>getParamFrame(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns a number of frame.</p>
+</blockquote>
+<h4>getParamNewDirection(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns a direction, from 0 to 31.</p>
+</blockquote>
+<h4>getParamClick(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns the click parameter (left/middle/right button).</p>
+</blockquote>
+<h4>getParamExpString(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns the result of a String expression.</p>
+</blockquote>
+<h4>getParamExpDouble(rhPtr, num)</h4>
+<blockquote>
+  <p>Returns as a double the result of the evaluation of the parameter.</p>
+</blockquote>
+<br />
+<h1><a name="CCndExtension" id="CCndExtension"></a>CCndExtension  callback functions</h1>
+<p>The CCndExtension object is transmitted to the extension when calling the condition  method. It contains callbacks to gather the parameters of the condition. Most of the method are identical to the ones in CActExtension, with the following differences :</p>
+<p><strong>Missing methods:<br />
+</strong>getParamPosition<br />
+getParamCreate<br />
+getParamShoot
+<p><strong>Different returns</strong><br />
+  The getParamObject method returns a pointer to the PARAM_OBJECT object (as in the  C++).<br />
+public PARAM_OBJECT getParamObject(CRun rhPtr, int num)</p>
+<h4>compareValues(rhPtr, num, value)</h4>
+<blockquote>
+  <p>In the C++ version, when you had a PARAM_COMPARAISON parameter in the condition, the condition routine returned a long value, and MMF was automatically doing the  comparison with the parameter. You have to call this method in the Flash version. For example, a condition with a PARAM_COMPARAISON as first parameter, the end of the condition method should be:</p>
+  <p>return cnd.compareValues(rh, 0, returnValue);</p>
+  <p>Where returnValue is the value to compare with. This function returns a boolean (true  or false).</p>
+</blockquote>
+<h4>compareTime(rhPtr, num, t)</h4>
+<blockquote>
+  <p>Same as the previous function, for PARAM_CMPTIME parameters, where &quot;t&quot; is the time to compare to. This function returns a boolean (true or false).</p>
+</blockquote>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+</body>
+</html>

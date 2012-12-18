@@ -1,0 +1,481 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Welcome</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,300italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+<h1>Converting a Flash object to an  HTML5 object</h1>
+<h2>François Lionet - 19/07/2012</h2>
+<p>This document will guide you step by step through  the conversion of the source code of a Flash extension object to a HTML5 extension object.</p>
+<p>ActionScript, as a language, is very similar to  JavaScript. It is almost, in fact, a strongly typed JavaScript. Most of the  syntax remains the same, and the default classes contain the same functions.</p>
+<p>While writing the HTML5 runtime, I discovered that  by carefully using search / replace in the correct order, most Flash objects can be converted to HTML5 in a couple of hours. The conversion process is very safe in that if you respect what is written in this document, there is little chance of conversion errors, and your object should work at first run.</p>
+<p>The only thing that needs to be rewritten is graphics routines, but as JavaScript is such a simple language to use, this should not take long.</p>
+ <br />
+<h1><a name="setup" id="setup"></a>Setup</h1>
+<p>You have to configure the  search/replace functions of your editor or IDE. The search should be <strong>case  sensitive</strong> and <strong>whole word only</strong>.</p>
+<p>Be careful when you copy the strings to replace from this document, as many of  them contain dots, brackets, commas etc. Using them exactly as I describe is <strong>essential</strong> for the conversion to work.</p>
+<p>I suggest that you regularly check if the conversion is correct by  scrolling through the code, so that you can undo if necessary.</p>
+<br />
+<h1><a name="beginning" id="beginning"></a>The beginning</h1>
+<ul>
+  <li>
+    <p>Open your  Flash IDE and load the extension you want to convert. In our example, I'll be  working on the Inventory object, so I open the file named  &quot;CRunInventory.as&quot;</p>
+  </li>
+  <li>
+    <p>Open the  editor you want to use use for HTML5 (I use Aptana), and create a new file  named &quot;<strong>extensionname.js</strong>&quot; (in my example it will be &quot;<strong>Inventory.js</strong>&quot;).  Note that the name is the name of the extension, respecting the case, and <strong>without</strong> &quot;CRun&quot; at the beginning.</p>
+  </li>
+</ul>
+<br />
+<h1><a name="copyCode" id="copyCode"></a>Initial copy of the code</h1>
+<p>Start by copying any comments at the begining of the  code if they are present. Javascript uses the same syntax for comments (// or  /* and */).</p>
+<br />
+<h1><a name="globalVars" id="globalVars"></a>Global variables</h1>
+<p>You certainly have global variables in your Flash code  : variables defined as &quot;const&quot; or as &quot;static&quot;. Copy and  paste the list of these variables at the beginning of your HTML5 code.</p>
+<ul>
+  <li>
+    <p>Using  search/replace, replace the variable definition (for example &quot;<strong>public  static var</strong>&quot;)  by an <strong>empty  string</strong>. This should leave you with a list of variable names like this one :</p>
+  </li>
+</ul>
+<div class="code">CND_NAMEDITEMSELECTED:int=0;<br />
+  CND_NAMEDCOMPARENITEMS:int=1;</div>
+<ul>
+  <li>
+    <p>Do another  global search/replace, this time search for &quot;<strong>:int</strong>&quot; (with a  column) and replace it with <strong>an empty string</strong>. Your  list of global variables should already look nicer.</p>
+  </li>
+  <li>
+    <p>Eventually  set the indentation of the list of variable using SHIFT-TAB</p>
+  </li>
+  <li>
+    <p>Will will  come back to this list later.</p>
+  </li>
+</ul>
+<br />
+<h1><a name="classContructor" id="classContructor"></a>The class constructor</h1>
+<p>We are going to have our  Javascript object structured as neatly as possible. Let's  create the class constructor.</p>
+<ul>
+  <li>Enter the  constructor function like this :</li>
+</ul>
+    <div class="code">function CRunnameofobject()<br />
+      {<br />
+}</div>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in our case, it would give :</p>
+<div class="code">
+  function  CRunInventory()<br />
+  {<br />
+  }</div>
+<p>This function will be called when the object is created. Although it is not  mandatory, we will declare and&nbsp;initialize&nbsp;all the class variables in  this function. Flash sets all the variables to 0 when the application  start,&nbsp;unexpected&nbsp;results might occur if we do not do the same in the  Javascript version.</p>
+<ul>
+  <li>Copy and  paste all the class variable definitions from your ActionScript code to your  Javascript constructor function. This should look like this :</li></ul>
+    <div class="code">public <span class="blue">var</span> type<span class="blue">:int</span>;
+      </p>
+      <br />
+&nbsp;&nbsp;&nbsp;public <span class="blue">var</span> logFont:CFontInfo;<br />
+&nbsp;&nbsp;&nbsp;public <span class="blue">var</span> pDisplayString:String;<br />
+&nbsp;&nbsp;&nbsp;public <span class="blue">var</span> bUpdateList:Boolean;</div>
+<ul>
+  <li>
+    <p>Now search  and replace &quot;<strong>public var</strong>&quot; (or may be in your case &quot;<strong>private  var</strong>&quot; by <strong>an empty string</strong>, it should look like this now :</p>
+  </li>
+</ul>
+<div class="code">type<span class="blue">:int</span>;<br />
+  logFont:CFontInfo;<br />
+pDisplayString:String;</div>
+<ul>
+  <li>
+    <p>Do a global search/replace of &quot;<strong>:int</strong>&quot;  with &quot;<strong>=0</strong>&quot;</p>
+  </li>
+  <li>
+    <p>Do a global search/replace of &quot;<strong>:String</strong>&quot;  with &quot;<strong>=null</strong>&quot; (if you use &quot;string&quot; in your  actionscript code, replace that too)</p>
+  </li>
+  <li>
+    <p>Do a global search/replace of &quot;<strong>:Boolean</strong>&quot;  with &quot;<strong>=false</strong>&quot; (if you use &quot;bool&quot; in your  actionscript code, replace that too)</p>
+  </li>
+  <li>
+    <p>Do a global search/replace of &quot;<strong>:Number</strong>&quot;  with &quot;<strong>=0</strong>&quot;</p>
+  </li>
+  <li>
+    <p>If you use any other objects as class  variables, set them to &quot;<strong>=null</strong>&quot;.</p>
+  </li>
+  <li>
+    <p>Your class constructor should look better  now:</p>
+  </li>
+</ul>
+<div class="code">type<span class="blue">=0</span>;<br />
+  logFont=null;<br />
+pDisplayString=null;</div>
+<ul>
+  <li>
+    <p>Leave the list as it is, we will come back to it later.</p>
+  </li>
+</ul>
+<br />
+<h1><a name="copying" id="copying"></a>Copying the main code</h1>
+<p>The main code of the extension will be defined in the prototype of the JavaScript object. Let's define the prototype:</p>
+<ul>
+  <li>
+    <p>Type the following:</p>
+  </li>
+</ul>
+<div class="code">CRunnameofextension.prototype  = CServices.extend(new CRunExtension(),<br />
+  {<br />
+  <br />
+  });</div>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In our example:</p>
+<div class="code">CRunInventory.prototype  = CServices.extend(new CRunExtension(),<br />
+  {<br />
+  <br />
+  });</div>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Be very careful to respect the curly and regular bracket structure. The functions of the object will be added as a list of properties to the prototype.</p>
+<ul>
+  <li>
+    <p>Now copy a large block of the ActionScript code (all the functions of the object), and paste it inside the curly brackets in the code we just entered</p>
+  </li>
+  <li>
+    <p>Correct the  indentation with SHIFT-TAB</p>
+  </li>
+  <li>
+    <p>We are now  ready to begin</p>
+  </li>
+</ul>
+<br />
+<h1><a name="removing" id="removing"></a>Removing ActionScript variable types</h1>
+<ul>
+  <li>
+    <p>Do a global  search/replace of &quot;<strong>:int</strong>&quot;, replacing it with an <strong>empty string</strong></p>
+  </li>
+  <li>
+    <p>Do a global  search/replace of &quot;<strong>:Boolean</strong>&quot; replacing it with an <strong>empty  string<br />
+  </strong>You might  also use &quot;<strong>bool</strong>&quot; for booleans in your ActionScript code. If  this is the case, replace &quot;&nbsp;<strong>:bool</strong>&quot; with an empty string  too.</p></li>
+</ul>
+<ul>
+  <li>
+    <p>Do a global  search/replace of &quot;&nbsp;<strong>:String</strong>&quot; with an <strong>empty string</strong><br />
+  Same here if  you use &quot;<strong>string</strong>&quot; instead of &quot;String&quot;</p></li>
+</ul>
+<ul>
+  <li>
+    <p>Do a global  search/replace of &quot;<strong>.CValue</strong>&quot; with an <strong>empty string</strong></p>
+  </li>
+  <li>
+    <p>Do a global  search/replace of &quot;<strong>.CActExtension</strong>&quot; with an <strong>emtpy string</strong></p>
+  </li>
+  <li>
+    <p>Do a global  search/replace of  &quot;<strong>.CCndExtension</strong>&quot;  with an <strong>empty string</strong></p>
+  </li>
+  <li>
+    <p>Do a global  search/replace of &quot;<strong>.CObject</strong>&quot; with an <strong>empty string</strong></p>
+  </li>
+  <li>
+    <p>Do a global  search/replace of &quot;<strong>:void</strong>&quot; with an <strong>empty string</strong></p>
+  </li>
+  <li>
+    <p>In a general  manner, if you use class names for variables, replace them (including the  &quot;.&quot; with an empty string. For example, in my Inventory object, I use  a class named &quot;CRunInventoryItem&quot;, so I do a global  search/replace of &quot;.CRunInventoryItem&quot; with an empty string.<br />
+    </p>
+  </li>
+</ul>
+<br />
+<h1><a name="inserting" id="inserting"></a>Inserting the name of the class  in the global variables</h1>
+<p>Lets go back to the top of the source, in the list of  global variables. We need to define them as variables of the class itself, like  this :</p>
+<div class="code">extensionname.VARIABLE=0;</div>
+<p>In my case, for example, I would get :</p>
+<div class="code">Inventory.ACT_LEFT=0;</div>
+<ul>
+  <li>
+    <p>Start with  the first line. Copy the name of the variable in the clipboard</p>
+  </li>
+  <li>
+    <p>Paste the  name from the clipboard in the search field of the search/replace dialog. For  our example, I would enter &quot;<strong>ACT_LEFT</strong>&quot;</p>
+  </li>
+  <li>
+    <p>Enter &quot;<strong>nameofextension.VARIABLENAME</strong>&quot;  in the replace field. For our previous example, I would enter  &quot;<strong>Inventory.ACT_LEFT</strong>&quot; in the  replace field</p>
+  </li>
+  <li>
+    <p>Do a global  replace. All occurrences of this global variable are now modified</p>
+  </li>
+  <li>
+    <p>Proceed the  same way for all the global variables.</p>
+  </li>
+  <li>
+    <p>At the end  of the process, your list of global variables should be perfect, and most  importantly, all the code in the object reflect the changes.</p>
+  </li>
+</ul>
+<br />
+<h1><a name="insertingThis" id="insertingThis"></a>Inserting &quot;this&quot; before  the class variables</h1>
+<p>Scroll to the  constructor of the object in the editor. Javascript needs the &quot;<strong>this</strong>&quot;  keyword to indicate if a variable is part of the current object. We will  proceed in a similar way as above, for all the class variables. The code will  become :</p>
+<div class="code">this.variable=0;</div>
+<p>In my example :</p>
+<div class="code">this.type=0;</div>
+<ul>
+  <li>
+    <p>Start with the first variable  defined in the constructor. Copy the name of the variable to the clipboard.</p>
+  </li>
+  <li>
+    <p>Paste the name in the search field  of the search/replace dialog. In my example I would enter &quot;<strong>type</strong>&quot;</p>
+  </li>
+  <li>
+    <p>Enter &quot;<strong>this.variablename</strong>&quot;  in the replace field of the search/replace dialog. In my case, I would enter  &quot;<strong>this.type</strong>&quot;</p>
+  </li>
+  <li>
+    <p>Proceed with the global replace. All  occurrences of the variable should be changed in the source.</p>
+  </li>
+  <li>
+    <p>Do the same for each one of the  variables defined in the constructor.</p>
+  </li>
+</ul>
+<p>&nbsp;</p>
+<p class="red"><strong>Warning:</strong> this procedure will not work if you use variables with the same name as class  variables (for example, if I used a variable named &quot;type&quot; in one of  the functions – doing this is a bad habit anyway). You may need to redo the  changes manually for such a variable.</p>
+<p>At the end of  the procedure, all of your class member variables should now have <strong>this</strong>.  before them throughout the source code.</p>
+<br />
+<h1><a name="fewMore" id="fewMore"></a>A few more things to search/replace</h1>
+<p>You may not use  them, but doing a search/replace for the next list of items will not take you a  lot of time.</p>
+<ul>
+  <li>
+    <p>Do a global search/replace for  &quot;<strong>ho</strong>&quot; with &quot;<strong>this.ho</strong>&quot;</p>
+  </li>
+  <li>
+    <p>Do a global search/replace for  &quot;<strong>rh</strong>&quot; with &quot;<strong>this.rh</strong>&quot;</p>
+  </li>
+  <li>
+    <p>Do a global search/replace for  &quot;<strong>new CValue(</strong>&quot; with &quot;<strong>(</strong>&quot;</p>
+  </li>
+  <li>
+    <p>Do a global search/replace for  &quot;<strong>readInt</strong>&quot; with &quot;<strong>readAInt</strong>&quot;</p>
+  </li>
+  <li>
+    <p>Do a global search/replace for  &quot;<strong>readShort</strong>&quot; with &quot;<strong>readAShort</strong>&quot;</p>
+  </li>
+  <li>
+    <p>Do a global search/replace for  &quot;<strong>readColor</strong>&quot; with &quot;<strong>readAColor</strong>&quot;</p>
+  </li>
+  <li>
+    <p>Do a global search/replace for  &quot;<strong>readString</strong>&quot; with &quot;<strong>readAString</strong>&quot;</p>
+  </li>
+  <li>
+    <p>Do a global search/replace for  &quot;<strong>readStringSize</strong>&quot; with &quot;<strong>readAString</strong>&quot;</p>
+  </li>
+</ul>
+<p>All of these  changes are to cope with the differences between <strong>CBinaryFile</strong> and <strong>CFile</strong> in the CreateRunObject function. I am really sorry for creating such a mess  – I should never have used CBinaryFile in ActionScript...</p>
+<ul>
+  <li>
+    <p>Do a global search/replace of &quot;<strong>.getInt()</strong>&quot;  with an <strong>empty string</strong></p>
+  </li>
+  <li>
+    <p>Do a global search/replace of &quot;<strong>.getDouble()</strong>&quot;  with an <strong>empty string</strong></p>
+  </li>
+  <li>
+    <p>Do a global search/replace of &quot;<strong>.getString()</strong>&quot;  with an <strong>empty string</strong></p>
+  </li>
+</ul>
+<br />
+<h1><a name="changing" id="changing"></a>Changing the function definitions</h1>
+<p>Now comes the  longest part of the job. Starting at the top of the source code, you will have  to modify the declaration of each function to make it compatible with JavaScript.  At the same time, you can review the code of the functions and make any manual  changes that are  necessary.</p>
+<p>Let's take this  function:</p>
+<div class="code">public override <span class="blue">function</span> getNumberOfConditions()</div>
+<p>It becomes in  Javascript :</p>
+<div class="code">getNumberOfConditions:<span class="blue">function</span>()</div>
+<p>Or this one :</p>
+<div class="code">public override <span class="blue">function</span> createRunObject(file:CBinaryFile,  cob:CCreateObjectInfo, version)</div>
+<p>It becomes in  Javascript :</p>
+<div class="code">createRunObject:<span class="blue">function</span>(file, cob, version)</div>
+<p>As you can see, the syntax of the declaration of a function is :</p>
+<div class="code">functionname:function(parameters)</div>
+<p>You should at  the same time you do this job, remove any type declaration for the parameters.  Do it in all the source code as soon as you encounter one. In my example above,  I would do a global search/replace of &quot;<strong>:CBinaryFile</strong>&quot; with an <strong>empty  string</strong>, and another global search/replace of &quot;<strong>:CCreateObjectInfo</strong>&quot;  with an <strong>empty string</strong>.</p>
+<p>By doing the  search/replace as soon as you encounter a new type declaration, you will slowly  but surely eliminate all the occurrences in the code and it will go faster and  faster as you progress.</p>
+<br />
+<h1><a name="ending" id="ending"></a>Ending the functions by a comma</h1>
+<p>The syntax of  Javascript enforces you to end the declaration of each property with a <strong>comma</strong>. So you must add a comma at the end of each function. Our example  function would become :</p>
+<div class="code">getNumberOfConditions:<span class="blue">function</span>()<br />
+  {<br />
+  <span class="pink">&nbsp;&nbsp;&nbsp;return</span> Inventory.CND_LAST;<br />
+  },</div>
+<p>A comma must  added at the end of each function <strong>except</strong> for the <strong>last</strong> one!</p>
+<p>Beware, if you  forget a comma somewhere in the code, your extension will <strong>not</strong> work (and  the HTML5 runtime will crash usually at the beginning of the code.</p>
+<br />
+<h1><a name="functionCalls" id="functionCalls"></a>Function calls</h1>
+<p>Your code might  contain internal functions, called in other places of your code.<br />
+  Calling such a  function must be done with the &quot;<strong>this</strong>&quot; operator.<br />
+  When re-reading  the code (while changing the function definitions) if you encounter such a  function, I suggest you do a global search replace of &quot;<strong>nameoffunction</strong>&quot;  to &quot;<strong>this.nameoffunction</strong>&quot;, which will change all the  places where the function is called.</p>
+<p>For example:</p>
+<div class="code">private <span class="blue">function</span> GetFixedValue(pHo)</div>
+<p>becomes</p>
+<div class="code">GetFixedValue:function(pHo)</div>
+<p>Then I do a  global search/replace of &quot;<strong>GetFixedValue</strong>&quot; with &quot;<strong>this.GetFixedValue</strong>&quot;. All of the function calls are changed in the code.</p>
+<p>As a side  effect, my function definition becomes :</p>
+<div class="code"><span class="blue">this</span>.GetFixedValue:function(pHo)</div>
+<p>Which is obviously wrong, so I need to remove the  &quot;this.&quot; to complete the code.<br />
+  You should do  this as soon as you encounter an internal function definition when exploring  the code. Do not forget to remove the &quot;this.&quot; prefix in the function  definition.</p>
+<br />
+<h1><a name="ChangingTypecasts" id="ChangingTypecasts"></a>Changing the typecasts</h1>
+<p>As Javascript  is not a strongly typed language, you do not need to cast a variable from class  to class. You do need to in ActionScript, and the syntax of a cast in  ActionScript is:</p>
+<div class="code">=class(variable)</div>
+<p>So it could be  possible to do a global search/replace of &quot;<strong>newclass(</strong>&quot; with  &quot;<strong>(</strong>&quot;, leaving only the brackets in the code. But beware! Doing  this will also change a line like this one :</p>
+<div class="code">var variable=new class();</div>
+<p>to</p>
+<div class="code">var variable=();</div>
+<p>So you may save time by doing a global search/replace of the casts as indicated above, providing  you know where the occurrences of &quot;<strong>new class()</strong>&quot; are located  and change them manually.</p>
+<br />
+<h1><a name="displayingObj" id="displayingObj"></a>Displaying your object</h1>
+<p>One thing is  very different between Flash and HTML5: how the object is displayed.</p>
+<h3>No  need to create sprites and add them to the display list</h3>
+<p>In the HTML5  runtime, the display of the object is handled automatically. This means you can  remove all of the following from your Flash source:<br />
+</p>
+<ul>
+  <li>
+    <p>Creation of sprite objects</p>
+  </li>
+  <li>
+    <p>Creation of TextField objects</p>
+  </li>
+  <li>
+    <p>Adding these objects to the display  list of the object's layer</p>
+  </li>
+</ul>
+<p>Usually, these  objects are created in the CreateRunObject function.</p>
+<p>MMF  automatically calls the displayRunObject function when necessary. It takes into  account whether 
+the object is a background or not. Hiding and showing the  object is also performed automatically. 
+Same for the functions that change the  display priority of the object. (It should have been like that in the Flash  runtime actually 8-| ).</p>
+<p>In fact, the  only thing you have to implement in the HTML5 runtime is the displayRunObject  function.</p>
+<h3>The  displayRunObject function now has 3 parameters: (renderer, xDraw, yDraw)</h3>
+<ul>
+  <li>
+    <p>renderer: contains the graphic renderer. If you want to use the canvas' context for drawing, 
+    you can get it with : var context=renderer._context. Use this parameter for drawing your object</p>
+  </li>
+  <li>
+    <p>xDraw : the X offset at which to  draw the object. This offset is different from zero if, for example, the layer  on which the object exists has been scrolled. You should add this value to the  position of your object (hoX)</p>
+  </li>
+  <li>
+    <p>yDraw : the Y offset at which to  draw the object.</p>
+  </li>
+</ul>
+<p>You can find a  pointer to the layer on which the object exists in <strong>this.ho.pLayer</strong>. You  can find out if the object is shown or hidden with <strong>this.ho.bShown</strong> (boolean).  You should calculate the coordinate at which to draw your object with the  following formula:</p>
+<div class="code"><span class="blue">var</span> x=<span class="red">this</span>.ho.hoX-<span class="red">this</span>.rh.rhWindowX+this.ho.pLayer.x+xDraw;<br />
+<span class="blue">var</span> y=<span class="red">this</span>.ho.hoY-<span class="red">this</span>.rh.rhWindowY+this.ho.pLayer.y+yDraw;</div>
+<p>You can find  the specifications of the Canvas context object at the following address:<br />
+  <br />
+  <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#the-canvas-element">http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#the-canvas-element</a></p>
+<p>It is a very  comprehensive document that I used a lot when writing the HTML5 runtime.</p>
+<br />
+<h1><a name="CrashRuntime" id="CrashRuntime"></a>So the runtime crashes when you test your object</h1>
+<p>As JavaScript  is an interpreted language, you will not get errors when you type the code.  Some IDEs like Aptana may indicate obvious mistakes on the left of the code.  But the real test comes when you launch an application with your object.</p>
+<p>Sometimes, the  debugger does not crash in the object itself, but at the beginning of the  runtime. This usually means an syntax error in the object. You will get an  &quot;Object not defined&quot; error in RuntimeDev.js (usually).</p>
+<p>This means that  something is wrong in your object.</p>
+<ul>
+  <li>
+    <p>You might have forgotten a comma at  the end of a function</p>
+  </li>
+  <li>
+    <p>You might have left a comma in the  end of the last function</p>
+  </li>
+  <li>
+    <p>You might have left a  &quot;this.&quot; operator in a function definition</p>
+  </li>
+  <li>
+    <p>You might have miscalculated the  number of brackets in a formula</p>
+  </li>
+  <li>
+    <p>and so on. Sometimes Javascript does  not detect obvious mistakes. Sometimes it does. It depends on the browser I  guess.</p>
+  </li>
+</ul>
+<p>The most  difficult thing is to locate the problem. Here is a somehow logical method  to eradicate this kind of problem.</p>
+<ul>
+  <li>
+    <p>Put a &quot;/*&quot; (start  of comment) at the beginning of the prototype definition (right after the first  bracket after the <strong>CServices.exend</strong> call. (leave the object constructor  out of it)</p>
+  </li>
+  <li>
+    <p>Put a &quot;*/&quot; (end of  comment) at the end of the code, right before the &quot;});&quot;. The main part of your code is now inactive (if you have  comments like /* … */ in your code, you will need to remove them.)</p>
+  </li>
+  <li>
+    <p>Run the program. If the error is still at the same location (in  RuntimeDev.js), it means that it was not corrected by the comment, so it must  lay at the beginning of your object.<br />
+      If the error is later in MMF code, it means that the error is at the beginning  of the object, for example in the global variable definitions.</p>
+  </li>
+  <li>
+    <p>If the error has not been detected, you need to refine the  search. Remove the first &quot;/*&quot; that you have inserted in the  code. Locate the middle of the code of your object, and insert a &quot;*/&quot;  there, before a function definition</p>
+  </li>
+  <li>
+    <p>Run the application again. If it crashes at the same place, this  means that the code with the error is still active. So cut the remaining code  by two by inserting the remark at the proper place. Try again. Refine again  etc.</p>
+  </li>
+</ul>
+<p>By doing this structured step-by-step approach,  you will find the source of the problem in a short time.</p>
+<br />
+<h1><a name="addingObj" id="addingObj"></a>Adding your object to the runtime</h1>
+<p>This is  described in the HTML5 SDK documentation, but it might be good to shorten it to  a few lines:</p>
+<h3><strong>During  development:</strong></h3>
+<ul>
+  <li>
+    <p>Add a line to include the code of  the extension in &quot;RuntimeDev.js&quot;, like this one :</p>
+  </li>
+</ul>
+<div class="code">document.write(<span class="blue">'&lt;script src=&quot;'</span>+document.srcPath+<span class="blue">'Inventory.js&quot;&gt;&lt;/script&gt;'</span>);</div>
+<ul>
+  <li>
+    <p>Open &quot;<strong>Extensions.js</strong>&quot;,  locate the <strong>CExtLoad</strong> class, and add a line in the <strong>loadRunObject</strong> function, between <strong>// STARTCUT</strong> and <strong>// ENDCUT</strong></p>
+  </li>
+</ul>
+<div class="code"><span class="green">if</span> (<span class="red">this</span>.name==<span class="blue">&quot;Inventory&quot;</span>)<br />
+<span class="green">&nbsp;&nbsp;&nbsp;return</span> new CRunInventory(); </div>
+<ul>
+  <li>
+    <p>Your object should now work with the  runtime</p>
+  </li>
+</ul>
+<h3>To add your  object to MMF itself:</h3>
+<ul>
+  <li>
+    <p>Copy the .js file to the  Data\Runtime\HTML5 folder of your MMF installation. In my example, I would  directly copy the Inventory.js file.</p>
+  </li>
+  <li>
+    <p>Restart MMF if it was running.</p>
+  </li>
+</ul>
+<br />
+<h1><a name="conclusion" id="conclusion"></a>As a conclusion</h1>
+<p>I hope I have  not forgotten anything in this document. Please keep me informed by PM on the  forum about any difficulty you might have converting you objects, as it might  indicate that I have forgotten something.</p>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+</body>
+</html>

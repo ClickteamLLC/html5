@@ -1,0 +1,36 @@
+@charset "utf-8";
+body {
+	background-color: #FFF;
+}
+
+ul {
+	font-family: 'Archivo Narrow', sans-serif;
+	font-size: 15px;
+	color: #999;
+	list-style-type: none;
+	text-indent: -30px;
+	margin-top: -15px;
+}
+
+h1 {
+	font-family: 'Archivo Narrow', sans-serif;
+	font-size: 20px;
+	color: #F93;
+}
+
+p {
+	font-family: 'Archivo Narrow', sans-serif;
+	font-size: 15px;
+	color: #999;
+}
+
+a, a:link {
+	text-decoration: underline;
+	color: #06F;	
+}
+
+a:hover {
+	font-weight: bold;
+	text-decoration: underline;
+	color: #F93;
+}
