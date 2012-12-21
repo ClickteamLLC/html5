@@ -2,7 +2,7 @@
 // ----------------------------------------------------------------
 /* Copyright (c) 1996-2012 Clickteam
 *
-* This source code is part of the XXXX exporter for Clickteam Multimedia Fusion 2.
+* This source code is part of the HTML5 exporter for Clickteam Multimedia Fusion 2.
 * 
 * Permission is hereby granted to any person obtaining a legal copy 
 * of Clickteam Multimedia Fusion 2 to use or modify this source code for 

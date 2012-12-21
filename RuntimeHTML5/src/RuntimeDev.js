@@ -1,6 +1,6 @@
 /* Copyright (c) 1996-2012 Clickteam
 *
-* This source code is part of the XXXX exporter for Clickteam Multimedia Fusion 2.
+* This source code is part of the HTML5 exporter for Clickteam Multimedia Fusion 2.
 * 
 * Permission is hereby granted to any person obtaining a legal copy 
 * of Clickteam Multimedia Fusion 2 to use or modify this source code for 
@@ -41,9 +41,13 @@ document.write('<script src="'+document.srcPath+'Banks.js"></script>');
 document.write('<script src="'+document.srcPath+'Movements.js"></script>');
 document.write('<script src="'+document.srcPath+'Values.js"></script>');
 document.write('<script src="'+document.srcPath+'ActiveBackdrop.js"></script>');
+document.write('<script src="'+document.srcPath+'AdvDir.js"></script>');
+document.write('<script src="'+document.srcPath+'AdvGameBoard.js"></script>');
+document.write('<script src="'+document.srcPath+'AdvPathMov.js"></script>');
 document.write('<script src="'+document.srcPath+'CalcRect.js"></script>');
 document.write('<script src="'+document.srcPath+'clickteam_movement_controller.js"></script>');
 document.write('<script src="'+document.srcPath+'Get.js"></script>');
+document.write('<script src="'+document.srcPath+'IIF.js"></script>');
 document.write('<script src="'+document.srcPath+'InAndOutController.js"></script>');
 document.write('<script src="'+document.srcPath+'KcArray.js"></script>');
 document.write('<script src="'+document.srcPath+'KcBoxA.js"></script>');
@@ -60,7 +64,11 @@ document.write('<script src="'+document.srcPath+'kclist.js"></script>');
 document.write('<script src="'+document.srcPath+'kcrandom.js"></script>');
 document.write('<script src="'+document.srcPath+'kcwctrl.js"></script>');
 document.write('<script src="'+document.srcPath+'Layer.js"></script>');
+document.write('<script src="'+document.srcPath+'MoveSafely2.js"></script>');
 document.write('<script src="'+document.srcPath+'ObjectMover.js"></script>');
+document.write('<script src="'+document.srcPath+'parser.js"></script>');
+document.write('<script src="'+document.srcPath+'Platform.js"></script>');
+document.write('<script src="'+document.srcPath+'StringTokenizer.js"></script>');
 document.write('<script src="'+document.srcPath+'WargameMap.js"></script>');
 document.write('<script src="'+document.srcPath+'clickteam_circular.js"></script>');
 document.write('<script src="'+document.srcPath+'clickteam_dragdrop.js"></script>');
