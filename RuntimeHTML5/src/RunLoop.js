@@ -8,9 +8,8 @@
 * Permission is hereby granted to any person obtaining a legal copy 
 * of Clickteam Multimedia Fusion 2 to use or modify this source code for 
 * debugging, optimizing, or customizing applications created with 
-* Clickteam Multimedia Fusion 2. Any other use of this source code in prohibited.
-* 
-* Any other use of this source code is prohibited. This source code may not be redistributed.
+* Clickteam Multimedia Fusion 2. 
+* Any other use of this source code in prohibited.
 *
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -517,7 +516,7 @@ CRun.prototype=
         this.rhApp.joystickOn=0;
     	if (this.rhApp.parentApp==null)
     	{
-	        if(window.DeviceMotionEvent)
+	        if(this.rhApp.touchable)
 	        {   		
 	            if (this.rhFrame.joystick == CRunFrame.JOYSTICK_EXT)
 	            {

@@ -8,9 +8,8 @@
 * Permission is hereby granted to any person obtaining a legal copy 
 * of Clickteam Multimedia Fusion 2 to use or modify this source code for 
 * debugging, optimizing, or customizing applications created with 
-* Clickteam Multimedia Fusion 2. Any other use of this source code in prohibited.
-* 
-* Any other use of this source code is prohibited. This source code may not be redistributed.
+* Clickteam Multimedia Fusion 2. 
+* Any other use of this source code in prohibited.
 *
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -573,7 +572,7 @@ function CDisplayText(xx, yy, s)
 
 // CFile Object 
 // -----------------------------------------------------------------
-/*
+
 function CFile()
 {
 }
@@ -634,7 +633,7 @@ CFile.prototype=
 	        if(ccfRequest.status != 200)
 	        {
 	            throwError('Failed to load the application (normal mode)');
-	            return;
+	            return false;
 	        }	        
 	        this.ccfBytes = ccfRequest.responseText;
 	    }
@@ -645,6 +644,7 @@ CFile.prototype=
 		}	    
 	    this.pointer=0;
 	    this.bUnicode=false;
+	    return true;
 	},
 	createFromFile:function(offset)
 	{
@@ -996,11 +996,12 @@ CFile.prototype=
     	return lf;
     }    
 }
-*/
 
+/*
 function CFile()
 {
 }
+
 document.write('<script type="text/vbscript">\n\
 	Function ieRawBytes(byteArray)\n\
         ieRawBytes = CStr(byteArray)\n\
@@ -1092,6 +1093,7 @@ CFile.prototype=
 			this.ccfString=null;
 			if (bd.browser=="Explorer")	
 			{
+				alert("Stop ici!");
 				this.ccfBytes=ieRawBytes(objBinaryFile.Content);
 			}
 			else
@@ -1453,7 +1455,7 @@ CFile.prototype=
     	return lf;
     }    
 }
-
+*/
 
 // CArrayList Object 
 // -----------------------------------------------------------------

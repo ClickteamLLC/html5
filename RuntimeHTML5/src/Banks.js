@@ -7,9 +7,8 @@
 * Permission is hereby granted to any person obtaining a legal copy 
 * of Clickteam Multimedia Fusion 2 to use or modify this source code for 
 * debugging, optimizing, or customizing applications created with 
-* Clickteam Multimedia Fusion 2. Any other use of this source code in prohibited.
-* 
-* Any other use of this source code is prohibited. This source code may not be redistributed.
+* Clickteam Multimedia Fusion 2. 
+* Any other use of this source code in prohibited.
 *
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -1368,11 +1367,13 @@ CSound.prototype=
 			{
 				this.nLoops=10000000;
 			}
+			this.sound.pause();
 			this.sound.volume=(v / 100.0);
 			this.sound.playbackRate=1.0;
-			if (this.application.browserDetect.browser!="Explorer")
+//			if (this.application.browserDetect.browser!="Explorer")
+			if (this.application.browserDetect.browser=="Chrome")
 				this.sound.load();
-			else				
+			else						
 				this.sound.currentTime=0;
 			this.bPaused=false;
 			this.bPlaying=true;
@@ -1473,7 +1474,7 @@ CSound.prototype=
                 return true;
             }
         }
-        return false;
+		return false;        
     }
    
 }

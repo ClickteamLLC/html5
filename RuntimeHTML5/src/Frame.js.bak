@@ -448,7 +448,7 @@ CLayer.prototype=
 		for (o=0; o<list.size(); o++)
 		{
 			bi=list.get(o);
-			if (bi.x<xRight && bi.x+bi.width>=xLeft)
+			if (bi.x<=xRight && bi.x+bi.width>=xLeft)
 			{
 				if (bi.y<=yBottom && bi.y+bi.height>=yFoot)
 				{

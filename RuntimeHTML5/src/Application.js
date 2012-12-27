@@ -8,9 +8,8 @@
 * Permission is hereby granted to any person obtaining a legal copy 
 * of Clickteam Multimedia Fusion 2 to use or modify this source code for 
 * debugging, optimizing, or customizing applications created with 
-* Clickteam Multimedia Fusion 2. Any other use of this source code in prohibited.
-* 
-* Any other use of this source code is prohibited. This source code may not be redistributed.
+* Clickteam Multimedia Fusion 2. 
+* Any other use of this source code in prohibited.
 *
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -197,7 +196,6 @@ CRunApp.prototype=
 	load: function()
 	{
 		this.file.seek(0);
-		
 		// Charge le mini-header
 		var b=this.file.readBuffer(4);
 		this.bUnicode=false;
@@ -403,7 +401,7 @@ CRunApp.prototype=
 		
 		this.canvas.application=this;
 		if (this.parentApp==null)
-		{
+		{			
 			this.canvas.addEventListener("mousemove", function(e)
 			{
 				that.mouseMove(e, that.canvas);
@@ -440,7 +438,7 @@ CRunApp.prototype=
 
 			document.onselectstart = function(){ return false; }
 		
-			this.touchable = 'createTouch' in document;
+			this.touchable = this.isMobile();
 			this.touchCalls=new CArrayList();
 			this.touchesID=new Array(CRunApp.MAX_TOUCHES);
 			this.bTouchesLocked=new Array(CRunApp.MAX_TOUCHES);
@@ -488,7 +486,19 @@ CRunApp.prototype=
 		
 		this.run=new CRun(this);
 	},
-
+	isMobile:function() 
+	{
+    	var agents = ['Android', 'webOS', 'iPhone', 'iPad', 'iPod', 'Blackberry', 'Windows Phone'];
+    	var nav=navigator.userAgent;
+    	for(i in agents) 
+    	{
+        	if(nav.indexOf(agents[i])>=0) 
+        	{
+            	return true;
+           }
+        }
+	    return false;
+	},
 	imageHasLoaded:function()
 	{
 		this.imagesLoaded++;
@@ -1319,6 +1329,9 @@ CRunApp.prototype=
 
 		if (!this.touchable)
 			this.touchMove( new CFakeTouch(e.pageX, e.pageY, this.canvas) );
+
+		e.preventDefault();
+		e.stopPropagation();
 	},
 	mouseUp:function(e)
 	{
@@ -1409,6 +1422,9 @@ CRunApp.prototype=
 		
 		if (!this.touchable)
 			this.touchStart( new CFakeTouch(e.pageX, e.pageY, this.canvas) );
+
+		e.preventDefault();
+		e.stopPropagation();
 	},
 	mouseOut:function(e)
 	{
@@ -1424,6 +1440,8 @@ CRunApp.prototype=
 	},
 	click:function(e)
 	{
+		e.preventDefault();
+		e.stopPropagation();
 //		if (this.run!=null && this.run.rhEvtProg!=null)
 //		   	this.run.rhEvtProg.onMouseButton(0, 1);
 		var n;	
@@ -1432,6 +1450,8 @@ CRunApp.prototype=
 	},
 	dblClick:function(e)
 	{
+		e.preventDefault();
+		e.stopPropagation();
 		if (this.run!=null && this.run.rhEvtProg!=null)
 		   	this.run.rhEvtProg.onMouseButton(0, 2);
 		var n;	
@@ -1440,6 +1460,7 @@ CRunApp.prototype=
 	},
 	mouseWheel:function(e)
 	{
+		e.preventDefault();
 		this.bMouseIn=true;
 		if ((typeof e.wheelDelta!='undefined'))
     		this.deltaWheel=e.wheelDelta/40;
@@ -1499,6 +1520,8 @@ CRunApp.prototype=
 				}						
 			}    			
    		}	
+   		event.preventDefault();
+   		event.stopPropagation();
 	},
 	touchMove:function(event)
 	{
@@ -1547,6 +1570,8 @@ CRunApp.prototype=
 				}
 			}			
    		}	
+   		event.preventDefault();
+   		event.stopPropagation();
 	},
 	touchEnd:function(event)
 	{
@@ -1592,6 +1617,8 @@ CRunApp.prototype=
 				}
 			}
     	}
+   		event.preventDefault();
+   		event.stopPropagation();
 	},
 
 	touchToMouse:function()
@@ -2946,7 +2973,7 @@ CJoystick.prototype=
         var x=this.app.getTouchX(touch);
         var y=this.app.getTouchY(touch);
         var key=this.getKey(x, y);
-        if (touch.identifier==this.touches[CJoystick.KEY_JOYSTICK])
+        if (key==CJoystick.KEY_JOYSTICK && touch.identifier==this.touches[CJoystick.KEY_JOYSTICK])
         {
 	        this.joystickX=x-this.imagesX[CJoystick.KEY_JOYSTICK];
 	        this.joystickY=y-this.imagesY[CJoystick.KEY_JOYSTICK];

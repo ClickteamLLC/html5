@@ -8,9 +8,8 @@
 * Permission is hereby granted to any person obtaining a legal copy 
 * of Clickteam Multimedia Fusion 2 to use or modify this source code for 
 * debugging, optimizing, or customizing applications created with 
-* Clickteam Multimedia Fusion 2. Any other use of this source code in prohibited.
-* 
-* Any other use of this source code is prohibited. This source code may not be redistributed.
+* Clickteam Multimedia Fusion 2. 
+* Any other use of this source code in prohibited.
 *
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -965,7 +964,7 @@ ACT_STARTLOOP.prototype=
 		var name=rhPtr.get_EventExpressionString(this.evtParams[0]);
 		if (name.length==0) 
 			return;
-		var number=rhPtr.get_EventExpressionInt(this.evtParams[1]);
+		var number=Math.floor(rhPtr.get_EventExpressionInt(this.evtParams[1]));
 
 		var pLoop;
 		var bInfinite=false;
