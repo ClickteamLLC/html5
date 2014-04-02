@@ -1,5 +1,5 @@
 
-Multimedia Fusion 2 HTML5 Extension Kit
+Clickteam Fusion 2.5 HTML5 Extension Kit
 20/01/2014
 (c) Clickteam 2014
 -------------------------------------------------------------------
