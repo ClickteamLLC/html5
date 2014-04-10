@@ -235,7 +235,7 @@ CRunTemplate.prototype = CServices.extend(new CRunExtension(),
                 break;
 
             // Dummy action : calls the CND_DUMMY2 condition of this object
-            case CRunTemplate.ACT_DUMMY2;
+            case CRunTemplate.ACT_DUMMY2:
                 var string = act.getParamExpString(this.rh, 0);
                 this.generateEvent(CRunTemplate.CND_DUMMY2, string);
                 break;
